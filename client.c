@@ -87,6 +87,8 @@ void send_message_to_socket(int argc, char *argv[], char *socket_file, int port_
     // Recieving final result msg from server
     memset(buffer, '\0', sizeof(buffer));
     if (read(sockfd, buffer, sizeof(buffer)) > 0) {
+        // int x = strlen(buffer);
+        // printf("%d\n", x);
         printf("CLIENT: Received from server:: %s\n", buffer);
     }
         

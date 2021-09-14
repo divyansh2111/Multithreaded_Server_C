@@ -55,7 +55,7 @@ Request* get_request(int sock_fd){
     len = ntohl(tmp);
 
     char buffer[1024];
-    char *args[len-2];
+    char **args = malloc(sizeof(char*)*(len-2));
     int n=1;
 
     // Accept the required number of strings from the client 
@@ -138,25 +138,15 @@ void* server_thread_func(void *arg){
 void* handle_dll_tasks(Data* d) {
     log_msg("SERVER: thread_function: starting", false);
 
-    // struct rlimit rl;
-    // getrlimit(RLIMIT_AS, &rl);
-    // printf("\n Default value is : %lld\n", (long long int)rl.rlim_cur);
-    // rl.rlim_cur = 10485760;
-    // setrlimit (RLIMIT_AS, &rl); 
-    // getrlimit(RLIMIT_AS, &rl);
-    // printf("\n Default value is : %lld\n", (long long int)rl.rlim_cur);getrlimit(RLIMIT_AS, &rl);
-    // printf("\n Default value is : %lld\n", (long long int)rl.rlim_cur);
-
     /*Todo Dispatcher*/
-    float res = dll_func();
     
-    char ccc[50] = {0}; 
-    gcvt(res, 6, ccc);
+    char *ans = dll_func(d->req->dll_name, d->req->func_name, d->req->func_args); 
     // printf("client ==> %d\n", *(d->client_soc));
-    write(*(d->client_soc), ccc, sizeof(ccc));
-    // printf("boom");
-    close(*(d->client_soc)); /* break connection */
+    printf("ANS => %s\n", ans);
+    write(*(d->client_soc), ans, strlen(ans));
+    close(*(d->client_soc)); 
     free(d);
+    free(ans);
     log_msg("SERVER: Done", false);
 
     return NULL;

@@ -26,8 +26,8 @@ void log_msg(const char *msg, bool terminate) {
  * @param port_no
  * @return client file descriptor
  */
-int make_named_socket(const char *socket_file, int port_no) {
-    printf("Creating AF_LOCAL socket at path %s\n", socket_file);
+int make_named_socket(int port_no) {
+    printf("Creating AF_INET socket with ip 127.0.0.1 and port no. %d\n", port_no);
     struct sockaddr_in name;
 
     // Create the socket
@@ -54,8 +54,8 @@ int make_named_socket(const char *socket_file, int port_no) {
  * @param socket_file
  * @param server_port_no
  */
-void send_message_to_socket(int argc, char *argv[], char *socket_file, int port_no) {
-    int sockfd = make_named_socket(socket_file, port_no);
+void send_message_to_socket(int argc, char *argv[], int port_no) {
+    int sockfd = make_named_socket(port_no);
 
     log_msg("CLIENT: Connect to server, about to write some stuff...", false);
     
@@ -67,11 +67,11 @@ void send_message_to_socket(int argc, char *argv[], char *socket_file, int port_
         }
 
     // sending the no_of_arguments to be recieved at the server side 
-    uint32_t len = htonl(argc-3);
+    uint32_t len = htonl(argc-2);
     write(sockfd, &len, sizeof(len));
 
     // Sending actual string inputs to the server
-    for(int i=3; i<argc; i++){
+    for(int i=2; i<argc; i++){
         memset(buffer, '\0', sizeof(buffer));
         strcpy(buffer, argv[i]);
         int n = send(sockfd, buffer, 1024, 0);
@@ -98,12 +98,12 @@ void send_message_to_socket(int argc, char *argv[], char *socket_file, int port_
 }
 
 int main(int argc, char *argv[]) {
-    if (argc < 5) {
-        printf("Usage: %s [Local socket file path] [server port] [Name of a dynamically loaded library] \n [Name of a function to call from the DLL] [Arguments to pass to the function(Space Seperated)]\n",
+    if (argc < 4) {
+        printf("Usage: %s [server port] [Name of a dynamically loaded library] \n [Name of a function to call from the DLL] [Arguments to pass to the function(Space Seperated)]\n",
                argv[0]);
         exit(-1);
     }
 
-    send_message_to_socket(argc, argv, argv[1], atoi(argv[2]));
+    send_message_to_socket(argc, argv, atoi(argv[1]));
     return 0;
 }

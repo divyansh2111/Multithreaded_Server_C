@@ -1,10 +1,11 @@
 #ifndef dynamic_library_loader
 
 #include <dlfcn.h>
+#include <string.h>
 
 char* check_validity_and_run(char *func, char** arg, void* handle){
     char *error;
-    char *buff = malloc(64);
+    char *buff = malloc(128);
     if(strcmp(func, "sin")==0){
         double (*sin)(double);
         sin = dlsym(handle, "sin");
@@ -109,11 +110,11 @@ char* check_validity_and_run(char *func, char** arg, void* handle){
     }
     
     memset(buff, 0, sizeof(buff));
-    strcat(buff, "Incorrect dll name or function name");
+    strcat(buff, "Unsupported dll name or function name");
     return buff;
 }
 
-char* dll_func(char* dll, char *func, char **args) {
+char* dll_func(char* dll, char *func, char **args, int flag) {
     void *handle;
 
     char dll_name[50] = "/lib/x86_64-linux-gnu/libm.so.6";
@@ -127,9 +128,11 @@ char* dll_func(char* dll, char *func, char **args) {
     // printf("%s\n", func);
     char *ans = check_validity_and_run(func, args, handle);
     dlclose(handle);
-    free(dll);
-    free(func);
-    free(args);
+    if(!flag){
+        free(dll);
+        free(func);
+        free(args);
+    }
     // printf("Ans => %s\n", ans);
     return ans;
 }

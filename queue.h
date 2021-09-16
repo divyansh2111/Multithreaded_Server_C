@@ -75,9 +75,9 @@ int enqueue(Queue* q, Data* d){
         return -1;
     q->curr_cap += 1;
     Node* tmp = createNode(d);
-    if(q->front==q->rear){
+    if(q->front==NULL && q->rear==NULL){
         q->front = tmp;
-        q->rear=tmp;
+        q->rear = tmp;
     }
     else{
         q->rear->next = tmp;
@@ -97,7 +97,7 @@ Data* dequeue(Queue* q){
     
     q->curr_cap -= 1;
     Node* tmp=q->front;
-
+    // printf("YO");
     if(q->front==q->rear)
         q->front = q->rear = NULL;
     else{

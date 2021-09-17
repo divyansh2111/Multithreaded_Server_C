@@ -22,7 +22,6 @@
 #include <errno.h>
 #include "queue.h"
 #include "dynamic_library_loader.h"
-#include "resource_check.h"
 
 #define server_backlog 100
 

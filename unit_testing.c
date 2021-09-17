@@ -33,7 +33,7 @@ int main(){
     Request* req = createRequest(dll, func, args);
 
     // Check createRequest function
-    if(!strcmp(req->dll_name, dll) && !(strcmp(req->func_name,func)) && !(strcmp(args[0], req->func_args[0])))
+    if(!strcmp(req->dll_name, dll) && !(strcmp(req->func_name,func)) && !(strcmp(args[0], req->func_args[0])) && !(strcmp(args[1], req->func_args[1])))
         printf("Testcase-3 Passed\n");
     else    
         printf("Testcase-3 Failed\n"); 
@@ -188,7 +188,20 @@ int main(){
     else    
         printf("Testcase-20 Failed\n");
 
+    // checking for invalid arguments
+    memset(dll, 0, sizeof(dll));
+    strcpy(dll, "/lib/x86_64-linux-gnu/libm.so.6");
+    memset(func, 0, sizeof(func));
+    strcpy(func, "pow");
+    memset(args[0], 0, sizeof(args[0]));
+    strcpy(args[0], "55ab");
     
+    ans = dll_func(dll, func, args, 1);
+    
+    if(strcmp(ans,"Invalid Arguments")==0)
+        printf("Testcase-21 Passed\n");
+    else    
+        printf("Testcase-21 Failed\n");
     free(q); free(cli); free(req); free(d); 
     
     return 0;

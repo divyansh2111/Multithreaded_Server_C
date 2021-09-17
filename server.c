@@ -1,3 +1,9 @@
+/*
+    References:
+    https://www.geeksforgeeks.org/get-set-process-resource-limits-in-c/
+    https://man7.org/linux/man-pages/man2/setrlimit.2.html
+*/
+
 #include <stdio.h>
 #include <sys/resource.h>
 #include <errno.h>
@@ -7,7 +13,6 @@
 #include <fcntl.h>
 #include "queue.h"
 #include "dynamic_library_loader.h"
-#include "resource_check.h"
 #include "server_utils.h"
 
 int main(int argc, char *argv[]) {
@@ -35,7 +40,7 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "%s\n", strerror(errno));
 
     // Set Combined File Descriptor limit
-  
+    
     // Setting new value
     lim.rlim_cur = 1024;
     lim.rlim_max = atoi(argv[5])*1024;
